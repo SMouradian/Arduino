@@ -1,14 +1,10 @@
 //Arduino Program - Created 04.08.2023
 //Authors - Nathan Gomez, Mary Cottier, Nick Grainger, Samuel Mouradian
-//Version - 4.0
-//Last Revision - 04.18.2023 by Samuel Mouradian: "Cleaned up code; removed all unnecessary LCD implementation. SD card is found, logfile is initialized, and user count is working and printing to Serial Monitor."
-
+//Version - 5.0
+//Last Revision - 04.25.2023 by Samuel Mouradian: "Cleaned up code; real time clock has been reprogrammed to display correct time and date."
 //Still To-Do:
   //1. Continue cleaning up code
-
-//NOTES:
-  //NONE
-
+  //2. Formal CSV file so it's easier to read, if possible
 
 
 #include <LiquidCrystal.h>
@@ -105,10 +101,10 @@ void onSensorChanged() {
 
 
 // One time initialization
-void setup() {
+void setup(){
   // Serial monitor for debugging
   Serial.begin(9600);
-
+  
   // Real time clock
   if(!rtc.begin()){
     Serial.println("No rtc");
@@ -118,7 +114,7 @@ void setup() {
     Serial.println("Updating rtc clock");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-  rtc.start();
+  rtc.adjust(DateTime(2024, 4, 25, 11, 0, 0));
 
   // Initialize the SD card
   pinMode(chipSelect, OUTPUT);
@@ -138,7 +134,7 @@ void setup() {
   if(!logfile){
     Serial.println("couldnt create event log file");
   }
-  if(newfile = true){
+  if(newfile == true){
     logfile.println("Event Time, Duration, Event Count, Hour Count, Day Count, Cummulative Count");
   }
 
